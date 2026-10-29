@@ -114,6 +114,18 @@ paths = {o["path"] for o in router.delivery_log()}
 check("11. path enum is exactly route/no_match/human",
       paths == {"route", "no_match", "human"}, str(paths))
 
+print("-- 转人工队列容量（overflow 标记）--")
+r_ovf = AgentRouter(rules=[{"role": "any", "task_type": "t",
+                            "human": True}], human_queue_capacity=1)
+o_ovf1 = r_ovf.route({"role": "a", "task_type": "t"})
+o_ovf2 = r_ovf.route({"role": "b", "task_type": "t"})
+check("12. human queue overflow marked but ticket kept",
+      o_ovf1["queue_overflow"] is False
+      and o_ovf2["queue_overflow"] is True
+      and bool(o_ovf1["human_ticket"]) and bool(o_ovf2["human_ticket"]),
+      f"t1_overflow={o_ovf1['queue_overflow']} "
+      f"t2_overflow={o_ovf2['queue_overflow']}")
+
 
 print()
 print("=" * 78)
