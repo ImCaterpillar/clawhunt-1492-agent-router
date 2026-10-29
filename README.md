@@ -7,7 +7,7 @@
 ## 一条命令验证全部
 
 ```bash
-python run_tests.py      # -> PASS 11 / FAIL 0
+python run_tests.py      # -> PASS 12 / FAIL 0
 python demo.py           # -> 三类路径直观演示
 ```
 
@@ -31,10 +31,11 @@ python run_tests.py
 # ✅ 4. no-match -> fallback-bot (default)
 # ✅ 7. human takeover triggered (high-value payment)
 # ...
-# Result: PASS 11   FAIL 0
+# Result: PASS 12   FAIL 0
 ```
 
-无人为途径绕过三类路径——每条路径都有独立断言（测试 1-11）。
+无人为途径绕过三类路径——每条路径都有独立断言（测试 1-12），
+其中测试 12 验证转人工队列溢出时仍不丢单（打 overflow 标记）。
 
 ## 快速开始
 
@@ -49,7 +50,7 @@ python demo.py               # 三类路径演示
 ```
 .
 ├── agent_router.py          # 协作路由层（核心）
-├── run_tests.py             # 验收验证（11 项断言）
+├── run_tests.py             # 验收验证（12 项断言）
 ├── demo.py                  # 三类路径演示
 ├── examples/
 │   └── router_config.json   # 路由表示例（含三类场景说明）
