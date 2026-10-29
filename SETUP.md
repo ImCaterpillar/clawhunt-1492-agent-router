@@ -10,7 +10,7 @@
 
 ```bash
 # 在项目根目录
-python run_tests.py        # 11 项验收断言，期望 PASS 11 / FAIL 0
+python run_tests.py        # 12 项验收断言，期望 PASS 12 / FAIL 0
 python demo.py             # 三类路径演示，期望退出码 0
 ```
 
