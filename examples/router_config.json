@@ -1,0 +1,53 @@
+{
+  "default_target": "fallback-bot",
+  "rules": [
+    {
+      "role": "any",
+      "task_type": "approve_high_value_payment",
+      "human": true,
+      "priority": 100,
+      "note": "高额支付需人工审批"
+    },
+    {
+      "role": "finance_bot",
+      "task_type": "create_invoice",
+      "target": "finance-bot",
+      "priority": 80
+    },
+    {
+      "role": "hr_bot",
+      "task_type": "onboard_employee",
+      "target": "hr-bot",
+      "priority": 80
+    },
+    {
+      "role": "hr_bot",
+      "task_type": "query_leave_balance",
+      "target": "hr-bot",
+      "priority": 70
+    },
+    {
+      "role": "support_bot",
+      "task_type": ["ticket_triage", "faq_answer"],
+      "target": "support-bot",
+      "priority": 70
+    },
+    {
+      "role": "any",
+      "task_type": "unknown_operation",
+      "target": "fallback-bot",
+      "priority": 1,
+      "note": "兜底"
+    }
+  ],
+  "validation_scenario": {
+    "name": "three_paths",
+    "assertion": "至少演示正常路由、无匹配和转人工三类路径",
+    "steps": [
+      "正例1: 任务 (hr_bot, onboard_employee) -> 正常路由到 hr-bot",
+      "正例2: 任务 (finance_bot, create_invoice) -> 正常路由到 finance-bot",
+      "反例: 任务 (data_bot, run_analytics) -> 无匹配 -> 回退 fallback-bot",
+      "转人工: 任务 (任意角色, approve_high_value_payment) -> 生成人工接管单"
+    ]
+  }
+}
