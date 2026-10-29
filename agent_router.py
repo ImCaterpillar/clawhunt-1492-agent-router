@@ -180,9 +180,9 @@ class AgentRouter:
 
     def _to_human(self, task, rule):
         ticket = "HUMAN-" + uuid.uuid4().hex[:10].upper()
-        if len(self.human_queue) >= self.human_queue_capacity:
-            # 队列满：仍然产生接管单（拒绝转人工会丢真实任务）
-            pass
+        # 队列满（>= capacity）时不丢任务：仍在单上打 overflow 标记，
+        # 人工侧据此知道已经积压、需要尽快处理。
+        overflow = len(self.human_queue) >= self.human_queue_capacity
         self.human_queue.append({
             "ticket": ticket,
             "task": task,
@@ -190,14 +190,18 @@ class AgentRouter:
             "reason": rule.get("note") or "转人工规则命中",
             "created_at": time.time(),
             "status": "awaiting_human",
+            "overflow": overflow,
         })
         outcome = {
             "path": "human",
             "target": None,
             "rule_id": rule["rule_id"],
             "human_ticket": ticket,
+            "queue_overflow": overflow,
             "reason": f"转人工: 命中规则 {rule['rule_id']}"
-                      f"（{rule.get('note') or '人工接管'}），已生成接管单",
+                      f"（{rule.get('note') or '人工接管'}），已生成接管单"
+                      + ("；⚠️ 人工队列已满，本单标记 overflow"
+                         if overflow else ""),
             "ts": time.time(),
             "task": task,
         }
